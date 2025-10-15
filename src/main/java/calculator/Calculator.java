@@ -17,14 +17,7 @@ public class Calculator {
         this.value = DEFAULT_VALUE;
     }
 
-    public void run() {
-        System.out.println("덧셈할 문자열을 입력해 주세요.");
-        String input = Console.readLine();
-        process(input);
-        System.out.println("결과 : " + getValue());
-    }
-
-    private void process(String input) {
+    public void process(String input) {
         Pattern pattern = Pattern.compile(REGEX, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(input);
 
