@@ -43,7 +43,7 @@ class CalculatorTest {
 
         private void process() {
             // "//;\n1;2;3" ; => 구분 문자
-            String input = "1,2,3";
+            String input = "//;\n1;2;3";
             String delimiter = DEFAULT_DELIMITER;
 
             String[] numbers = input.split(delimiter);
