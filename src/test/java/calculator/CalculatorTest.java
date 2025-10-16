@@ -41,6 +41,7 @@ class CalculatorTest {
         }
 
         private void process(String input) {
+            input = input.replaceAll("\\n", "\n");
             Pattern pattern = Pattern.compile(REGEX, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(input);
 
@@ -56,7 +57,9 @@ class CalculatorTest {
         private void parseValue(String delimiter, String line) {
             String[] tokens = line.split(delimiter);
             for (String token : tokens) {
-                if (token.isEmpty()) continue;
+                if (token.isEmpty()) {
+                    continue;
+                }
                 value += Integer.parseInt(token);
             }
         }

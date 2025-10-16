@@ -11,7 +11,8 @@ public class CalculatorController {
     private Calculator calculator = new Calculator();
 
     public void run() {
-        String input = inputView.readLine();
-        calculator.process(input);
+        outputView.start();
+        int value = calculator.process(inputView.readLine());
+        outputView.print(value);
     }
 }
