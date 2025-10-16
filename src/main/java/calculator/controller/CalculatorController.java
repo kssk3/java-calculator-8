@@ -1,4 +1,8 @@
-package calculator;
+package calculator.controller;
+
+import calculator.domain.Calculator;
+import calculator.view.InputView;
+import calculator.view.OutputView;
 
 public class CalculatorController {
 

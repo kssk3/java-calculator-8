@@ -1,6 +1,5 @@
-package calculator;
+package calculator.domain;
 
-import camp.nextstep.edu.missionutils.Console;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
