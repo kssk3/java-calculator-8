@@ -13,7 +13,7 @@ public class CalculatorController {
 
     public void run() {
         outputView.start();
-        int value = calculatorService.value(inputView.readLine());
+        int value = calculatorService.calculate(inputView.readLine());
         outputView.print(value);
     }
 }

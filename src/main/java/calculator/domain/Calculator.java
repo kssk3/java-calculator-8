@@ -44,6 +44,11 @@ public class Calculator {
 
         String[] tokens = line.split(delimiter);
         for (String token : tokens) {
+            // 구분 문자로 tokens 값을 나눌 경우, 구분 문자는 제거되고
+            // 구분 문자 사이의 값들만 배열에 포함됨
+            // ex1) "1,2,3" => ["1", "2", "3"]
+            // ex2) "1,,3" => ["1", "", "3"]  (연속된 구분자 사이는 빈 문자열)
+            // ex3) "132343" (구분자가 3일 때) => ["1", "2", "", "4"]
             if (token.isEmpty()) continue;
             try {
                 result.add(Integer.parseInt(token));
