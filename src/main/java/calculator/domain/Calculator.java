@@ -44,6 +44,7 @@ public class Calculator {
 
         String[] tokens = line.split(delimiter);
         for (String token : tokens) {
+            if (token.isEmpty()) continue;
             try {
                 result.add(Integer.parseInt(token));
                 if (result.getLast() <= 0) {
