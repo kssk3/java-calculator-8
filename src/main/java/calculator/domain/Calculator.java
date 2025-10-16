@@ -10,21 +10,20 @@ public class Calculator {
     private static final String REGEX = "//(.)\n(.*)";
     private static final String DEFAULT_DELIMITER = ",|:";
     private static final String EXCEPTION_MESSAGE = "구분 문자와 양수만 입력 가능합니다.";
-    private static final int DEFAULT_VALUE = 0;
 
     private List<Integer> values;
 
-    public Calculator() {
-        this.values = new ArrayList<>();
+    public Calculator(List<Integer> numbers) {
+        this.values = numbers;
     }
 
     public int sum() {
         return values.stream()
-                .mapToInt(Integer::intValue)
+                .mapToInt(Integer::valueOf)
                 .sum();
     }
 
-    public int process(String input) {
+    public static Calculator process(String input) {
         input = input.replace("\\n", "\n");
         Pattern pattern = Pattern.compile(REGEX, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(input);
@@ -36,23 +35,26 @@ public class Calculator {
             delimiter += "|" + Pattern.quote(matcher.group(1));
             line = matcher.group(2);
         }
-        parseValue(delimiter, line);
-        return sum();
+        List<Integer> numbers = parseValue(delimiter, line);
+        return new Calculator(numbers);
     }
 
-    private void parseValue(String delimiter, String line) {
+    private static List<Integer> parseValue(String delimiter, String line) {
+        List<Integer> result = new ArrayList<>();
+
         String[] tokens = line.split(delimiter);
         for (String token : tokens) {
-            try{
-                Integer result = Integer.parseInt(token);
-                if(result <= 0){
+            try {
+                result.add(Integer.parseInt(token));
+                if (result.getLast() <= 0) {
                     throw new IllegalArgumentException();
                 }
-                values.add(result);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 throw new IllegalArgumentException(EXCEPTION_MESSAGE);
             }
         }
+
+        return result;
     }
 
 }
