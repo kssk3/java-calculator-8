@@ -7,8 +7,10 @@ import java.util.regex.Pattern;
 
 public class Calculator {
 
-    private static final String REGEX = "//(.)\n(.*)";
     private static final String DEFAULT_DELIMITER = ",|:";
+    private static final String PREFIX = "//";
+    private static final String ESCAPE_NEWLINE = "\\n";
+    private static final String NEW_LINE = "\n";
     private static final String EXCEPTION_MESSAGE = "구분 문자와 양수만 입력 가능합니다.";
 
     private List<Integer> values;
@@ -24,31 +26,51 @@ public class Calculator {
     }
 
     public static Calculator process(String input) {
-        input = input.replace("\\n", "\n");
-        Pattern pattern = Pattern.compile(REGEX, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(input);
+        if(input == null || input.isEmpty()) {
+            return new Calculator(new ArrayList<>());
+        }
 
         String delimiter = DEFAULT_DELIMITER;
         String line = input;
 
-        if (matcher.matches()) {
-            delimiter += "|" + Pattern.quote(matcher.group(1));
-            line = matcher.group(2);
+        if(input.startsWith(PREFIX)) {
+            DelimiterInfo info = extraDelimiter(input);
+            if (info.userNewLine) {
+                throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+            }
+
+            delimiter = DEFAULT_DELIMITER + "|" + Pattern.quote(info.delimiter);
+            line = info.numberString;
         }
+
         List<Integer> numbers = parseValue(delimiter, line);
         return new Calculator(numbers);
     }
 
+    private static DelimiterInfo extraDelimiter(String input) {
+        int escapeIndex = input.indexOf(ESCAPE_NEWLINE);
+
+        if(escapeIndex != -1) {
+            String customDelimiter = input.substring(PREFIX.length(), escapeIndex);
+            String numbers = input.substring(escapeIndex + ESCAPE_NEWLINE.length());
+            return new DelimiterInfo(customDelimiter, numbers, false);
+        }
+
+        int newLineIndex = input.indexOf(NEW_LINE);
+        if (newLineIndex != -1) {
+            String customDelimiter = input.substring(PREFIX.length(), newLineIndex);
+            String numbers = input.substring(newLineIndex + NEW_LINE.length());
+            return new DelimiterInfo(customDelimiter, numbers, true);
+        }
+
+        throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+    }
+    
     private static List<Integer> parseValue(String delimiter, String line) {
         List<Integer> result = new ArrayList<>();
 
         String[] tokens = line.split(delimiter);
         for (String token : tokens) {
-            // 구분 문자로 tokens 값을 나눌 경우, 구분 문자는 제거되고
-            // 구분 문자 사이의 값들만 배열에 포함됨
-            // ex1) "1,2,3" => ["1", "2", "3"]
-            // ex2) "1,,3" => ["1", "", "3"]  (연속된 구분자 사이는 빈 문자열)
-            // ex3) "132343" (구분자가 3일 때) => ["1", "2", "", "4"]
             if (token.isEmpty()) continue;
             try {
                 result.add(Integer.parseInt(token));
@@ -62,5 +84,16 @@ public class Calculator {
 
         return result;
     }
+    
+    private static class DelimiterInfo{
+        private String delimiter;
+        private String numberString;
+        private boolean userNewLine;
 
+        public DelimiterInfo(String delimiter, String numberString, boolean userNewLine) {
+            this.delimiter = delimiter;
+            this.numberString = numberString;
+            this.userNewLine = userNewLine;
+        }
+    }
 }

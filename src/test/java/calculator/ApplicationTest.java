@@ -1,7 +1,6 @@
 package calculator;
 
 import camp.nextstep.edu.missionutils.test.NsTest;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static camp.nextstep.edu.missionutils.test.Assertions.assertSimpleTest;
@@ -21,26 +20,40 @@ class ApplicationTest extends NsTest {
     @Test
     void 예외_테스트() {
         assertSimpleTest(() ->
-            assertThatThrownBy(() -> runException("-1,2,3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                assertThatThrownBy(() -> runException("-1,2,3"))
+                        .isInstanceOf(IllegalArgumentException.class)
         );
     }
 
     @Test
     void 커스텀_구분문자에_숫자사용_백슬래쉬_2번사용() {
-        assertSimpleTest(() ->{
+        assertSimpleTest(() -> {
             run("//3\\n132343");
             assertThat(output().contains("결과 : 7"));
         });
     }
 
-    // \\n, \n 둘다 개행 문자 개행 문자로 변경해서
-    // "//3\\n132343", "//3\n132343" 입력값이 주어질 경우 둘다 테스트를 하고 싶었으나 하지 못했습니다.
     @Test
     void 커스텀_구분문자에_숫자사용_리터럴사용() {
-        assertSimpleTest(() ->{
+        assertSimpleTest(() -> {
             assertThatThrownBy(() -> runException("//3\n132343"))
                     .isInstanceOf(IllegalArgumentException.class);
+        });
+    }
+
+    @Test
+    void 연속된_구분자가_오는경우() {
+        assertSimpleTest(() -> {
+            run("1,,2,,3");
+            assertThat(output().contains("결과 : 6"));
+        });
+    }
+
+    @Test
+    void 연속된_구분자_테스트() {
+        assertSimpleTest(() -> {
+            run("//..\\n1..2..3");
+            assertThat(output()).contains("결과 : 6");
         });
     }
 
