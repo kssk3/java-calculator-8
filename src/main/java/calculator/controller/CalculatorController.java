@@ -7,9 +7,9 @@ import calculator.view.OutputView;
 
 public class CalculatorController {
 
-    private InputView inputView = new InputView();
-    private OutputView outputView = new OutputView();
-    private CalculatorService calculatorService = new CalculatorService();
+    private final InputView inputView = new InputView();
+    private final OutputView outputView = new OutputView();
+    private final CalculatorService calculatorService = new CalculatorService();
 
     public void run() {
         outputView.start();

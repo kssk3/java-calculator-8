@@ -2,7 +2,6 @@ package calculator.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Calculator {
@@ -35,7 +34,7 @@ public class Calculator {
 
         if(input.startsWith(PREFIX)) {
             DelimiterInfo info = extraDelimiter(input);
-            if (info.userNewLine) {
+            if (info.usedNewLine) {
                 throw new IllegalArgumentException(EXCEPTION_MESSAGE);
             }
 
@@ -86,14 +85,14 @@ public class Calculator {
     }
     
     private static class DelimiterInfo{
-        private String delimiter;
-        private String numberString;
-        private boolean userNewLine;
+        private final String delimiter;
+        private final String numberString;
+        private final boolean usedNewLine;
 
-        public DelimiterInfo(String delimiter, String numberString, boolean userNewLine) {
+        public DelimiterInfo(String delimiter, String numberString, boolean usedNewLine) {
             this.delimiter = delimiter;
             this.numberString = numberString;
-            this.userNewLine = userNewLine;
+            this.usedNewLine = usedNewLine;
         }
     }
 }
