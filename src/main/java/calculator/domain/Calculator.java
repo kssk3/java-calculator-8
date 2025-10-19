@@ -49,6 +49,15 @@ public class Calculator {
     private static DelimiterInfo extraDelimiter(String input) {
         int escapeIndex = input.indexOf(ESCAPE_NEWLINE);
 
+        DelimiterInfo customDelimiter = getDelimiterInfo(input, escapeIndex);
+        if (customDelimiter != null) {
+            return customDelimiter;
+        }
+
+        throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+    }
+
+    private static DelimiterInfo getDelimiterInfo(String input, int escapeIndex) {
         if(escapeIndex != -1) {
             String customDelimiter = input.substring(PREFIX.length(), escapeIndex);
             String numbers = input.substring(escapeIndex + ESCAPE_NEWLINE.length());
@@ -61,10 +70,9 @@ public class Calculator {
             String numbers = input.substring(newLineIndex + NEW_LINE.length());
             return new DelimiterInfo(customDelimiter, numbers, true);
         }
-
-        throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+        return null;
     }
-    
+
     private static List<Integer> parseValue(String delimiter, String line) {
         List<Integer> result = new ArrayList<>();
 
