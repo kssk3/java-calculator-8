@@ -34,12 +34,12 @@ public class Calculator {
 
         if(input.startsWith(PREFIX)) {
             DelimiterInfo info = extraDelimiter(input);
-            if (info.usedNewLine) {
+            if (info.isUsedNewLine()) {
                 throw new IllegalArgumentException(EXCEPTION_MESSAGE);
             }
 
-            delimiter = DEFAULT_DELIMITER + "|" + Pattern.quote(info.delimiter);
-            line = info.numberString;
+            delimiter = DEFAULT_DELIMITER + "|" + Pattern.quote(info.getDelimiter());
+            line = info.getNumberString();
         }
 
         List<Integer> numbers = parseValue(delimiter, line);
@@ -91,16 +91,5 @@ public class Calculator {
 
         return result;
     }
-    
-    private static class DelimiterInfo{
-        private final String delimiter;
-        private final String numberString;
-        private final boolean usedNewLine;
 
-        public DelimiterInfo(String delimiter, String numberString, boolean usedNewLine) {
-            this.delimiter = delimiter;
-            this.numberString = numberString;
-            this.usedNewLine = usedNewLine;
-        }
-    }
 }
