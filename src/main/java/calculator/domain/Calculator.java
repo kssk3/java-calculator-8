@@ -8,8 +8,8 @@ public class Calculator {
 
     private static final String DEFAULT_DELIMITER = ",|:";
     private static final String PREFIX = "//";
-    private static final String ESCAPE_NEWLINE = "\\n";
     private static final String NEW_LINE = "\n";
+    private static final String ESCAPE_NEWLINE = "\\n";
     private static final String EXCEPTION_MESSAGE = "구분 문자와 양수만 입력 가능합니다.";
 
     private List<Integer> values;
@@ -29,14 +29,13 @@ public class Calculator {
             return new Calculator(new ArrayList<>());
         }
 
+        input = input.replace(ESCAPE_NEWLINE, NEW_LINE);
+
         String delimiter = DEFAULT_DELIMITER;
         String line = input;
 
         if(input.startsWith(PREFIX)) {
             DelimiterInfo info = extraDelimiter(input);
-            if (info.isUsedNewLine()) {
-                throw new IllegalArgumentException(EXCEPTION_MESSAGE);
-            }
 
             delimiter = DEFAULT_DELIMITER + "|" + Pattern.quote(info.getDelimiter());
             line = info.getNumberString();
@@ -47,7 +46,7 @@ public class Calculator {
     }
 
     private static DelimiterInfo extraDelimiter(String input) {
-        int escapeIndex = input.indexOf(ESCAPE_NEWLINE);
+        int escapeIndex = input.indexOf(NEW_LINE);
 
         DelimiterInfo customDelimiter = getDelimiterInfo(input, escapeIndex);
         if (customDelimiter != null) {
@@ -60,15 +59,8 @@ public class Calculator {
     private static DelimiterInfo getDelimiterInfo(String input, int escapeIndex) {
         if(escapeIndex != -1) {
             String customDelimiter = input.substring(PREFIX.length(), escapeIndex);
-            String numbers = input.substring(escapeIndex + ESCAPE_NEWLINE.length());
+            String numbers = input.substring(escapeIndex + NEW_LINE.length());
             return new DelimiterInfo(customDelimiter, numbers, false);
-        }
-
-        int newLineIndex = input.indexOf(NEW_LINE);
-        if (newLineIndex != -1) {
-            String customDelimiter = input.substring(PREFIX.length(), newLineIndex);
-            String numbers = input.substring(newLineIndex + NEW_LINE.length());
-            return new DelimiterInfo(customDelimiter, numbers, true);
         }
         return null;
     }

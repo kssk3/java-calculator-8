@@ -78,25 +78,40 @@
 
 ### 해결 방법
 ```java
-private static DelimiterInfo extraDelimiter(String input) {
-    // 1순위 : 이스케이프된 \n 체크 (정상 케이스)
-        int escapeIndex = input.indexOf(ESCAPE_NEWLINE); // "\\n" 찾기
-        
-        if(escapeIndex != -1) {
-            String customDelimiter = input.substring(PREFIX.length(), escapeIndex);
-            String numbers = input.substring(escapeIndex + ESCAPE_NEWLINE.length());
-            return new DelimiterInfo(customDelimiter, numbers, false);
-        }
-    // 2순위 : 실제 개행문자 체크 (예외 케이스)
-        int newLineIndex = input.indexOf(NEW_LINE); // "\n" 찾기 
-        if (newLineIndex != -1) {
-            String customDelimiter = input.substring(PREFIX.length(), newLineIndex);
-            String numbers = input.substring(newLineIndex + NEW_LINE.length());
-            return new DelimiterInfo(customDelimiter, numbers, true);
-        }
+private static final String ESCAPE_NEWLINE = "\\n";
+private static final String NEW_LINE = "\n";
 
-        throw new IllegalArgumentException(EXCEPTION_MESSAGE);
-    }
+public static Calculator process(String input) {
+  if(input == null || input.isEmpty()) {
+    return new Calculator(new ArrayList<>());
+  }
+
+  input = input.replace(ESCAPE_NEWLINE, NEW_LINE);
+
+  String delimiter = DEFAULT_DELIMITER;
+  String line = input;
+
+  if(input.startsWith(PREFIX)) {
+    DelimiterInfo info = extraDelimiter(input);
+
+    delimiter = DEFAULT_DELIMITER + "|" + Pattern.quote(info.getDelimiter());
+    line = info.getNumberString();
+  }
+
+  List<Integer> numbers = parseValue(delimiter, line);
+  return new Calculator(numbers);
+}
+
+private static DelimiterInfo extraDelimiter(String input) {
+  int escapeIndex = input.indexOf(NEW_LINE);
+
+  DelimiterInfo customDelimiter = getDelimiterInfo(input, escapeIndex);
+  if (customDelimiter != null) {
+    return customDelimiter;
+  }
+
+  throw new IllegalArgumentException(EXCEPTION_MESSAGE);
+}
 ```
 
 ### 검증 로직

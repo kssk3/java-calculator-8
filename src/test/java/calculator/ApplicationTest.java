@@ -29,12 +29,12 @@ class ApplicationTest extends NsTest {
     void 커스텀_구분문자에_숫자사용_백슬래쉬_2번사용() {
         assertSimpleTest(() -> {
             run("//3\\n132343");
-            assertThat(output().contains("결과 : 7"));
+            assertThat(output()).contains("결과 : 7");
         });
     }
 
     @Test
-    void 커스텀_구분문자에_숫자사용_리터럴사용() {
+    void 커스텀_구분문자에_숫자사용_개행문자() {
         assertSimpleTest(() -> {
             assertThatThrownBy(() -> runException("//3\n132343"))
                     .isInstanceOf(IllegalArgumentException.class);
@@ -45,7 +45,7 @@ class ApplicationTest extends NsTest {
     void 연속된_구분자가_오는경우() {
         assertSimpleTest(() -> {
             run("1,,2,,3");
-            assertThat(output().contains("결과 : 6"));
+            assertThat(output()).contains("결과 : 6");
         });
     }
 
